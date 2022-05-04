@@ -27,23 +27,26 @@ def get_statuses():
     df = pd.DataFrame(j)
     df["last_reported"] = df["last_reported"]
     df = df.astype({'is_renting':bool, 'stationCode':str,'last_reported':'datetime64[s]'})
-    df = df.join(df["num_bikes_available_types"].apply(lambda l: pd.Series({**l[0], **l[1]})))
-    df = df[["stationCode", "mechanical", "ebike", "is_renting", "last_reported"]]
+    df = df.join(df["num_bikes_available_types"].apply(lambda l: pd.Series({**l[0], **l[1]}, dtype='float64')))
+
+    requested_cols = ["stationCode", "mechanical", "ebike", "is_renting", "last_reported"]
+
+    # More robust code
+    df = df[[col for col in df.columns if col in requested_cols]]
+
     df.rename({
         "mechanical": "available_mechanical",
         "ebike": "available_electrical",
         "is_renting": "operative",
         "last_reported": "time",
     }, axis='columns', inplace=True)
-    df["time"] = pd.Timestamp("now", tz='UTC') # TODO: use last_reported ?
+    #df["time"] = pd.Timestamp("now", tz='UTC') # TODO: use last_reported ?
     df.set_index('time', inplace=True)
-    # df.sort_index(inplace=True)
     return df
 
 def main():
     status_df = get_statuses()
     timestamp = dt.datetime.now().strftime("%Y-%m-%d_%H%M%S")
-    #print(timestamp, ": got status")
 
     df = status_df
 
