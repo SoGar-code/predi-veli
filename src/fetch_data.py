@@ -25,7 +25,7 @@ def get_statuses():
     sapi = "https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/station_status.json"
     j = requests.get(sapi).json()["data"]["stations"]
     df = pd.DataFrame(j)
-    df["last_reported"] = df["last_reported"]
+    #df["last_reported"] = df["last_reported"]
     df = df.astype({'is_renting':bool, 'stationCode':str,'last_reported':'datetime64[s]'})
     df = df.join(df["num_bikes_available_types"].apply(lambda l: pd.Series({**l[0], **l[1]}, dtype='float64')))
 
