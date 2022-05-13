@@ -6,10 +6,12 @@ and save it as CSV files
 NB: adapted from https://github.com/lovasoa/historique-velib-opendata/
 """
 import os
-import time
 import datetime as dt
 import pandas as pd 
 import requests
+
+#PREDIVELI_PATH = os.path.expanduser("~/Documents/predi-veli")
+PREDIVELI_PATH = "D:\git\predi-veli"
 
 def get_stations():
     sapi="https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/station_information.json"
@@ -51,12 +53,10 @@ def main():
     df = status_df
 
     file_name = 'station_status_{}.csv'.format(timestamp)
-    file_path = os.path.join("data", file_name)
-    df.to_csv(file_path, header=False, mode='a', date_format='%Y-%m-%dT%H:%MZ')
+    file_path = os.path.join(PREDIVELI_PATH, "data", file_name)
+    df.to_csv(file_path, header=True, mode='a', date_format='%Y-%m-%dT%H:%MZ')
+    print("timestamp:", timestamp)
 
 if __name__ == "__main__":
-    while True:
-        main()
-        print("===")
-        # 10 min - script execution time
-        time.sleep(10*60 - 1)
+    main()
+    print("===")

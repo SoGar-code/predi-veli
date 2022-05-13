@@ -58,6 +58,7 @@ def collect_statuses(date_str, zip_delete=False):
     
     histo_df = pd.concat([get_status_df(file_path) for file_path in status_day], axis=0)
     
+    histo_df.drop_duplicates(inplace=True)
     histo_df.sort_index(inplace=True)
     
     save_path = "..\data\Summary_{}.parquet".format(date_str)
