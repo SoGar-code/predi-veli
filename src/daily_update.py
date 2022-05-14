@@ -12,6 +12,8 @@ import pandas as pd
 import requests
 from zipfile import ZipFile
 
+from slack_notif import push_slack
+
 def get_stations():
     sapi="https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/station_information.json"
     stations_df = pd.DataFrame(requests.get(sapi).json()["data"]["stations"])
@@ -35,15 +37,23 @@ def fetch_save_stations_info():
     df.to_csv(file_path, header=False, mode='a', date_format='%Y-%m-%dT%H:%MZ')
 
 
-def get_status_df(file_path):
+def get_status_df(file_path, has_header=True):
     """ Get dataframe from provided path """
-    df = pd.read_csv(
-        file_path, 
-        parse_dates=[0], 
-        header=None, 
-        names= ["date", "station_code", "available_mechanical", "available_electrical", "operative"],
-        index_col="date"
-    )
+    if has_header:
+        df = pd.read_csv(
+            file_path, 
+            parse_dates=[0]
+        )        
+
+    else:
+        df = pd.read_csv(
+            file_path, 
+            parse_dates=[0], 
+            header=None, 
+            names= ["date", "station_code", "available_mechanical", "available_electrical", "operative"],
+            index_col="date"
+        )
+    
     return df
 
 
@@ -60,13 +70,29 @@ def collect_statuses(date_str, zip_delete=False):
     
     histo_df.drop_duplicates(inplace=True)
     histo_df.sort_index(inplace=True)
+
     
-    save_path = "..\data\Summary_{}.parquet".format(date_str)
+    file_name = "Summary_{}.parquet".format(date_str)
+    save_path = os.path.join("..", "data", file_name)
 
     histo_df.to_parquet(save_path)
 
     if zip_delete:
         zip_and_delete(status_day, date_str)
+
+    nb_rows = len(histo_df)
+    slack_message(file_name, nb_rows)
+
+
+def slack_message(file_name, nb_rows):
+    """ Generate and push a message to Slack """
+    floor_nb_rows = 120000
+
+    msg = "Completed '{}'. Saved a total of {} rows (typical: >={})"
+
+    if (nb_rows < floor_nb_rows):
+        msg +="\n :rotating_light: <@UJ924G1A9> something wrong!"
+    push_slack(msg.format(file_name, nb_rows, floor_nb_rows))
 
 
 def zip_and_delete(file_list, date_str):
@@ -77,7 +103,31 @@ def zip_and_delete(file_list, date_str):
         for file in file_list:
             zip.write(file)
 
+
+def get_historique_file(input_path, has_name=False, has_code=False):
+    """ Get 'historique' file """
     
+    try:
+        col_names = ["date", "capacity","available_mechanical","available_electrical"]
+        if has_name:
+            col_names.append("stationName")
+        if has_code:
+            col_names.append("stationCode")
+        
+        # In any case
+        col_names += ["station_geo","operative"]
+        
+        df = pd.read_csv(input_path, header=None, parse_dates=[0],
+            names= col_names,
+            index_col="date"
+           )
+        
+        return df
+    except KeyError as e:
+        msg = "Something wrong in '{}'. Error details:".format(input_path)
+        print(msg)
+        print(e)
+
 
 
 def main():

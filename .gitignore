@@ -60,3 +60,6 @@ target/
 # data
 csv/
 data/
+
+# dotenv var
+.env

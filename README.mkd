@@ -1,0 +1,34 @@
+# Predi-Veli
+
+## About 
+
+A project to predict the number of availabe vélibs.
+
+Basic goal: predict the number of vélibs,
+* in a specific station,
+* from one day (~21h) to the next (between 07:30 and 10:00)
+
+## Possible extensions
+
+* include weather data
+
+# Current implementation
+
+## Data scraper
+
+* using the `fetch_data.py` file,
+* with a CRON which reads essentially:
+```
+* * * * * python3 ~/predi-veli/src/fetch_data.py > ~/README
+```
+
+## Slack messages - Dotenv
+
+Tokens for Slack should be saved in a `.env` file included *inside src*. Expected format is:
+```
+# Slack Token
+SLACK_API_TOKEN="xoxb-example-this-will-not-work"
+
+# Output channel on Slack
+CHANNEL_ID="C0-ANOTHER-EXAMPLE"
+```
