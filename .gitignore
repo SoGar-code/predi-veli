@@ -63,3 +63,6 @@ data/
 
 # dotenv var
 .env
+
+# venv
+predi-veli-venv/

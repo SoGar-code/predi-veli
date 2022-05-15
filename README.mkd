@@ -1,4 +1,4 @@
-# Predi-Veli
+pred# Predi-Veli
 
 ## About 
 
@@ -19,16 +19,21 @@ Basic goal: predict the number of vélibs,
 * using the `fetch_data.py` file,
 * with a CRON which reads essentially:
 ```
-* * * * * python3 ~/predi-veli/src/fetch_data.py > ~/README
+*/10 * * * * cd ~/predi-veli && python3 src/fetch_data.py >>  ~/fetch_data.log
+4 4 * * * cd ~/predi-veli && python3 -m src.daily_update >>  ~/daily_update.log
 ```
+NB: actually, we are using virtual envs, so `python3` actually stands for a longer expression!
 
 ## Slack messages - Dotenv
 
-Tokens for Slack should be saved in a `.env` file included *inside src*. Expected format is:
+Tokens for Slack should be saved in a `.env` file included in `predi-veli` 
+and commands should be run from this root folder. Expected format is:
 ```
 # Slack Token
 SLACK_API_TOKEN="xoxb-example-this-will-not-work"
 
 # Output channel on Slack
 CHANNEL_ID="C0-ANOTHER-EXAMPLE"
+
+PREDIVELI_PATH="path-to-predi-veli-folder"
 ```

@@ -10,8 +10,9 @@ import datetime as dt
 import pandas as pd 
 import requests
 
-#PREDIVELI_PATH = os.path.expanduser("~/Documents/predi-veli")
-PREDIVELI_PATH = "D:\git\predi-veli"
+from dotenv import dotenv_values
+
+PREDIVELI_PATH = dotenv_values(".env")["PREDIVELI_PATH"]
 
 def get_stations():
     sapi="https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/station_information.json"

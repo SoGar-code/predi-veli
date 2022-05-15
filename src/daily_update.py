@@ -12,7 +12,7 @@ import pandas as pd
 import requests
 from zipfile import ZipFile
 
-from slack_notif import push_slack
+from src.slack_notif import push_slack
 
 def get_stations():
     sapi="https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/station_information.json"
@@ -59,10 +59,10 @@ def get_status_df(file_path, has_header=True):
 
 def collect_statuses(date_str, zip_delete=False):
     """ Collect data from *date_str* into a single parquet file """
-    data_path = os.listdir("../data")
+    data_path = os.listdir("data")
     
     prefix_str = "station_status_{}".format(date_str)
-    status_day = [os.path.join("..", "data", file_name) 
+    status_day = [os.path.join("data", file_name) 
                     for file_name in data_path 
                     if file_name.startswith(prefix_str)]
     
@@ -73,7 +73,7 @@ def collect_statuses(date_str, zip_delete=False):
 
     
     file_name = "Summary_{}.parquet".format(date_str)
-    save_path = os.path.join("..", "data", file_name)
+    save_path = os.path.join("data", file_name)
 
     histo_df.to_parquet(save_path)
 
