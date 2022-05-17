@@ -42,7 +42,8 @@ def get_status_df(file_path, has_header=True):
     if has_header:
         df = pd.read_csv(
             file_path, 
-            parse_dates=[0]
+            parse_dates=["time"],
+            index_col="time",
         )        
 
     else:
@@ -57,6 +58,22 @@ def get_status_df(file_path, has_header=True):
     return df
 
 
+def extract_enrich_data(file_path):
+    """ Extract data + add a new column saving file name """
+    df = get_status_df(file_path)
+
+    file_time_str = os.path.basename(file_path)[15:-4]
+    file_time = dt.datetime.strptime(file_time_str, '%Y-%m-%d_%H%M%S')
+    df["file_time"] = pd.to_datetime(file_time)
+
+    df["file_time"] = df["file_time"].dt.tz_localize(tz="Europe/Paris")
+
+    df.reset_index(inplace=True)
+    df.set_index("file_time", inplace=True)
+
+    return df
+
+
 def collect_statuses(date_str, zip_delete=False):
     """ Collect data from *date_str* into a single parquet file """
     data_path = os.listdir("data")
@@ -66,12 +83,15 @@ def collect_statuses(date_str, zip_delete=False):
                     for file_name in data_path 
                     if file_name.startswith(prefix_str)]
     
-    histo_df = pd.concat([get_status_df(file_path) for file_path in status_day], axis=0)
-    
-    histo_df.drop_duplicates(inplace=True)
-    histo_df.sort_index(inplace=True)
+    histo_df = pd.concat([extract_enrich_data(file_path) 
+                            for file_path in status_day], axis=0)
 
+    # Type conversion for saving with parquet
+    histo_df["stationCode"] = histo_df["stationCode"].astype(str)
     
+    histo_df.sort_index(inplace=True)
+    histo_df.drop_duplicates(inplace=True)
+
     file_name = "Summary_{}.parquet".format(date_str)
     save_path = os.path.join("data", file_name)
 
@@ -137,7 +157,10 @@ def main():
     date_str = yesterday.strftime("%Y-%m-%d")
     collect_statuses(date_str)
 
+    return date_str
+
 
 if __name__ == "__main__":
-    main()
-    print("=== Daily Update ran! ===")
+    date_str = main()
+    msg = "=== Daily Update ran, processing {} ==="
+    print(msg.format(date_str))
