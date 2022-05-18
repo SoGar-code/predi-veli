@@ -90,7 +90,6 @@ def collect_statuses(date_str, zip_delete=False):
     histo_df["stationCode"] = histo_df["stationCode"].astype(str)
     
     histo_df.sort_index(inplace=True)
-    histo_df.drop_duplicates(inplace=True)
 
     file_name = "Summary_{}.parquet".format(date_str)
     save_path = os.path.join("data", file_name)
