@@ -2,15 +2,21 @@ pred# Predi-Veli
 
 ## About 
 
-A project to predict the number of availabe vélibs.
+A project to predict the number of available vélibs.
 
 Basic goal: predict the number of vélibs,
 * in a specific station,
 * from one day (~21h) to the next (between 07:30 and 10:00)
 
-## Possible extensions
+## Possible improvement and extensions
 
+* Extract week day as feature
+* Include vacation (yes/no) as feature
 * include weather data
+
+### Technical improvements
+
+* send data automatically to a predefined server (FTP or something else).
 
 # Current implementation
 
