@@ -34,7 +34,7 @@ def fetch_save_stations_info():
 
     file_name = 'station_info_{}.csv'.format(timestamp)
     file_path = os.path.join("data", file_name)
-    df.to_csv(file_path, header=False, mode='a', date_format='%Y-%m-%dT%H:%MZ')
+    df.to_csv(file_path, header=True, mode='a', date_format='%Y-%m-%dT%H:%MZ')
 
 
 def get_status_df(file_path, has_header=True):
