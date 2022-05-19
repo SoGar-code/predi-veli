@@ -51,16 +51,16 @@ def get_status_df(file_path, has_header=True):
             file_path, 
             parse_dates=[0], 
             header=None, 
-            names= ["date", "station_code", "available_mechanical", "available_electrical", "operative"],
+            names= ["date", "stationCode", "available_mechanical", "available_electrical", "operative"],
             index_col="date"
         )
     
     return df
 
 
-def extract_enrich_data(file_path):
+def extract_enrich_data(file_path, has_header=True):
     """ Extract data + add a new column saving file name """
-    df = get_status_df(file_path)
+    df = get_status_df(file_path, has_header)
 
     file_time_str = os.path.basename(file_path)[15:-4]
     file_time = dt.datetime.strptime(file_time_str, '%Y-%m-%d_%H%M%S')
@@ -74,7 +74,7 @@ def extract_enrich_data(file_path):
     return df
 
 
-def collect_statuses(date_str, zip_delete=False):
+def collect_statuses(date_str, zip_delete=False, has_header=True):
     """ Collect data from *date_str* into a single parquet file """
     data_path = os.listdir("data")
     
@@ -83,7 +83,7 @@ def collect_statuses(date_str, zip_delete=False):
                     for file_name in data_path 
                     if file_name.startswith(prefix_str)]
     
-    histo_df = pd.concat([extract_enrich_data(file_path) 
+    histo_df = pd.concat([extract_enrich_data(file_path, has_header) 
                             for file_path in status_day], axis=0)
 
     # Type conversion for saving with parquet
