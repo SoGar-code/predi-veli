@@ -10,9 +10,15 @@ Basic goal: predict the number of vélibs,
 
 ## Possible improvement and extensions
 
+### Features
+
 * Extract week day as feature
 * Include vacation (yes/no) as feature
 * include weather data
+
+### Inside the model
+
+* include interactions between stations (*i.e.* if one is full, the closest ones are going to be filled more quickly).
 
 ### Technical improvements
 
