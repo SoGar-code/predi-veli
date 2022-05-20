@@ -94,7 +94,7 @@ def collect_statuses(date_str, zip_delete=False, has_header=True):
     file_name = "Summary_{}.parquet".format(date_str)
     save_path = os.path.join("data", file_name)
 
-    histo_df.to_parquet(save_path)
+    histo_df.to_parquet(save_path, compression="brotli")
 
     if zip_delete:
         zip_and_delete(status_day, date_str)
