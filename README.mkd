@@ -49,3 +49,14 @@ CHANNEL_ID="C0-ANOTHER-EXAMPLE"
 
 PREDIVELI_PATH="path-to-predi-veli-folder"
 ```
+
+## Running ML training
+
+A new virtual environnement was created to this end: `predi-veli-ml-venv`.
+
+To activate it:
+`conda activate predi-veli-ml-venv`
+
+To run auto-sklearn (on Windows), we need to use Linux, either through wsl (from cmd, possibly with elevated rights) or through a virtual machine.
+
+NB: the `requirements.txt` file in the repo corresponds to the venv for the scraper, not to the one required for the ML virtual environnement.
