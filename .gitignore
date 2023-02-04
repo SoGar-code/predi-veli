@@ -66,3 +66,12 @@ data/
 
 # venv
 predi-veli-venv/
+
+# Notebooks checkpoints
+.ipynb*
+
+# Saved models
+*.pkl
+
+# Data saves
+*.csv
