@@ -1,4 +1,4 @@
-pred# Predi-Veli
+# Predi-Veli
 
 ## About 
 
@@ -6,15 +6,9 @@ A project to predict the number of available vélibs.
 
 Basic goal: predict the number of vélibs,
 * in a specific station,
-* from one day (~21h) to the next (between 07:30 and 10:00)
+* between 9:00 and 9:30
 
 ## Possible improvement and extensions
-
-### Features
-
-* Extract week day as feature
-* Include vacation (yes/no) as feature
-* include weather data
 
 ### Inside the model
 
@@ -22,19 +16,21 @@ Basic goal: predict the number of vélibs,
 
 ### Technical improvements
 
-* send data automatically to a predefined server (FTP or something else).
+* send data automatically to a predefined server.
 
 # Current implementation
 
 ## Data scraper
 
+Deployed to get raw data at a 10 min interval by:
 * using the `fetch_data.py` file,
 * with a CRON which reads essentially:
 ```
 */10 * * * * cd ~/predi-veli && python3 src/fetch_data.py >>  ~/fetch_data.log
 4 4 * * * cd ~/predi-veli && python3 -m src.daily_update >>  ~/daily_update.log
 ```
-NB: actually, we are using virtual envs, so `python3` actually stands for a longer expression!
+NB: when using virtual envs (*e.g.* the one specified by the `requirements.txt` file), 
+`python3` actually stands for a longer expression!
 
 ## Slack messages - Dotenv
 
