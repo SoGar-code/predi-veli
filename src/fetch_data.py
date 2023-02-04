@@ -48,6 +48,8 @@ def main():
     df.to_csv(file_path, header=True, mode='a', date_format='%Y-%m-%dT%H:%MZ')
     print("timestamp:", timestamp)
 
+    # TODO: integrate weather data through pyOWM - see also https://knasmueller.net/using-the-open-weather-map-api-with-python
+
 
 if __name__ == "__main__":
     main()
